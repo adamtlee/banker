@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,6 +59,15 @@ public class BankAccountController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/total-amount")
+    public BigDecimal getTotalAmount() {
+        List<BankAccount> bankAccounts = bankAccountService.findAll();
+        BigDecimal totalAmount = bankAccounts.stream()
+                .map(BankAccount::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        return totalAmount;
     }
 }
 
